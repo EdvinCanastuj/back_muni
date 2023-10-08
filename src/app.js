@@ -1,6 +1,9 @@
 import express from 'express';
 import morgan from "morgan";
 import usuarioRoutes from "./routes/usuario.routes";
+import cargoRoutes from "./routes/cargo.routes";
+import articuloRoutes from "./routes/articulos.routes";
+import dependenciaRoutes from "./routes/dependencia.routes";
 const app = express();
 const cors = require('cors');
 // Settings
@@ -12,5 +15,8 @@ app.use(cors());
 
 // Routes
 app.use("/usuarios", usuarioRoutes);
+app.use("/cargos", cargoRoutes);
+app.use("/articulos", articuloRoutes);
+app.use("/dependencia", dependenciaRoutes);
 
 export default app;

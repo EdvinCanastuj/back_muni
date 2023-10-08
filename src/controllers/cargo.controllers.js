@@ -10,12 +10,12 @@ const getCargos = async (req, res) => {
   }
 };
 
-const getCargoById = async (req, res) => {
+const getCargo = async (req, res) => {
   try {
     console.log(req.params);
-    const { id } = req.params;
+    const { id_cargo } = req.params;
     const connection = await getConnection();
-    const result = await connection.query("SELECT * FROM cargo WHERE Id_cargo = ?;", [id]);
+    const result = await connection.query("SELECT * FROM cargo WHERE id_cargo = ?;", [id_cargo]);
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
@@ -24,12 +24,12 @@ const getCargoById = async (req, res) => {
 
 const addCargo = async (req, res) => {
   try {
-    const { Id_cargo, Nombre_cargo } = req.body;
-    if (!Id_cargo || !Nombre_cargo) {
+    const {  nombre_cargo } = req.body;
+    if ( !nombre_cargo) {
       res.status(400).json({ message: "Bad Request. Please fill all fields." });
       return;
     }
-    const cargo = { Id_cargo, Nombre_cargo };
+    const cargo = { Nombre_cargo };
     const connection = await getConnection();
     const result = await connection.query("INSERT INTO cargo SET ?", cargo);
     res.json({ message: "Cargo Added" });
@@ -40,9 +40,9 @@ const addCargo = async (req, res) => {
 
 const deleteCargo = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id_cargo } = req.params;
     const connection = await getConnection();
-    const result = await connection.query("DELETE FROM cargo WHERE Id_cargo = ?;", [id]);
+    const result = await connection.query("DELETE FROM cargo WHERE id_cargo = ?;", [id_cargo]);
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
@@ -51,15 +51,15 @@ const deleteCargo = async (req, res) => {
 
 const updateCargo = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { Id_cargo, Nombre_cargo } = req.body;
-    if (!Id_cargo || !Nombre_cargo) {
+    const { id_cargo } = req.params;
+    const { nombre_cargo } = req.body;
+    if (!id_cargo || !nombre_cargo) {
       res.status(400).json({ message: "Bad Request. Please fill all fields." });
       return;
     }
-    const cargo = { Id_cargo, Nombre_cargo };
+    const cargo = { nombre_cargo };
     const connection = await getConnection();
-    const result = await connection.query("UPDATE cargo SET ? WHERE Id_cargo = ?;", [cargo, id]);
+    const result = await connection.query("UPDATE cargo SET ? WHERE id_cargo = ?;", [cargo, id_cargo]);
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
@@ -68,7 +68,7 @@ const updateCargo = async (req, res) => {
 
 export const methods = {
   getCargos,
-  getCargoById,
+  getCargo,
   addCargo,
   updateCargo,
   deleteCargo
