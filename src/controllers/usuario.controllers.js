@@ -3,7 +3,7 @@ import {getConnection} from "./../db/database";
 const getUsuarios= async (req, res)=> {
     try{
         const connection= await getConnection();
-        const result = await connection.query("SELECT * FROM usuario;");      
+        const result = await connection.query("SELECT u.id_usuario, u.nombre_usuario, u.nombre, u.apellido, u.codigo, r.tipo_rol, d.nombre_dependencia, c.nombre_cargo FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol INNER JOIN cargo c ON u.id_cargo = c.id_cargo INNER JOIN dependencia d ON u.id_dependencia = d.id_dependencia;");      
         res.json(result);
     }catch(error){
         res.status(500);
@@ -87,8 +87,7 @@ const loginUsuario= async (req, res)=> {
     } catch (error) {
         res.status(500);
         res.send(error.message);
-        
-    }
+}
 };
 export const methods={
     getUsuarios,
