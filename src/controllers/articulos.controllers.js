@@ -3,7 +3,7 @@ import { getConnection } from "./../db/database";
 const getArticulos = async (req, res) => {
   try {
     const connection = await getConnection();
-    const result = await connection.query("SELECT * FROM articulos;");
+    const result = await connection.query("SELECT a.id_articulo, u.nombre, a.codigo, a.nombre_articulo, a.no_serie, a.valor_unitario, a.valor_total, a.valor_baja, a.observaciones, a.qr, a.cantidad FROM articulos a INNER JOIN usuario u ON a.id_usuario = u.id_usuario;");
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
@@ -22,58 +22,57 @@ const getArticulo = async (req, res) => {
 };
 
 const addArticulo = async (req, res) => {
-  //INSERT INTO `articulos` 
-  //(`id_articulo`, `id_usuario`, `codigo`, `nombre_articulo`, `no_serie`, `valor_unitario`, `valor_total`, `valor_baja`, `observaciones`, `qr`, `cantidad`) 
-  //VALUES (NULL, '1', '123', 'monitor', '123456', '15', '10', '12', 'as', '1', '2');
   try {
-    const {
-      id_usuario,
-      codigo,
-      nombre_articulo,
-      no_serie,
-      valor_unitario,
-      valor_total,
-      valor_baja,
-      observaciones,
-      qr,
-      cantidad
-    } = req.body;
+  const {
+  id_usuario,
+  codigo,
+  nombre_articulo,
+  no_serie,
+  valor_unitario,
+  valor_baja,
+  observaciones,
+  qr,
+  cantidad
+  } = req.body;
 
-    if (
-      !id_usuario ||
-      !codigo ||
-      !nombre_articulo ||
-      !no_serie ||
-      !valor_unitario ||
-      !valor_total ||
-      !valor_baja ||
-      !observaciones ||
-      !qr ||
-      !cantidad
-    ) {
-      res.status(400).json({ message: "Bad Request. Please fill all fields." });
-      return;
-    }
-
-    const articulo = {
-      id_usuario,
-      codigo,
-      nombre_articulo,
-      no_serie,
-      valor_unitario,
-      valor_total,
-      valor_baja,
-      observaciones,
-      qr,
-      cantidad
-    };
-
-    const connection = await getConnection();
-    const result = await connection.query("INSERT INTO articulos SET ?", articulo);
-    res.json({ message: "Articulo Added" });
-  } catch (error) {
-    res.status(500).send(error.message);
+  if (
+  !id_usuario ||
+  !codigo ||
+  !nombre_articulo ||
+  !no_serie ||
+  !valor_unitario ||
+  !valor_baja ||
+  !observaciones ||
+  !qr ||
+  !cantidad
+  ) {
+  res.status(400).json({ message: "Bad Request. Please fill all fields." });
+  return;
   }
+
+  const connection = await getConnection();
+
+  // Calculamos el valor total en la consulta SQL
+  const sql = `INSERT INTO articulos 
+              (id_usuario, codigo, nombre_articulo, no_serie, valor_unitario, valor_total, valor_baja, observaciones, qr, cantidad) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  const result = await connection.query(sql, [
+      id_usuario,
+      codigo,
+      nombre_articulo,
+      no_serie,
+      valor_unitario,
+      valor_unitario*cantidad, // Valor unitario * cantidad
+      valor_baja,
+      observaciones,
+      qr,
+      cantidad
+      ]);
+  res.json({ message: "Articulo Added" });
+} catch (error) {
+  res.status(500).send(error.message);
+}
 };
 
 const deleteArticulo = async (req, res) => {
