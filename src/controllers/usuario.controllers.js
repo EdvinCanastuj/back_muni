@@ -35,20 +35,20 @@ const addUsuario = async (req, res)=> {
         //INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `nombre`, `apellido`, `contrasena`, `codigo`, `id_rol`, `id_cargo`
         const connection= await getConnection();
         const result = await connection.query("INSERT INTO usuario SET ?",usuario);
-        res.json(result);
+        //res.json(result);
         res.json({message: "Usuario Added"});
     }catch(error){
         res.status(500);
         res.send(error.message);
     }
 };
+
 //api para eliminar un usuario
 const deleteUsuario= async (req, res)=> {
     try{
-        console.log(req.params);
-        const {id} = req.params;
+        const {id_usuario} = req.params;
         const connection= await getConnection();
-        const result = await connection.query("DELETE FROM usuario WHERE id_usuario = ?;",id);    
+        const result = await connection.query("DELETE FROM usuario WHERE id_usuario = ?;",id_usuario);    
         res.json(result);
     }catch(error){
         res.status(500);
