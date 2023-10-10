@@ -4,6 +4,7 @@ import usuarioRoutes from "./routes/usuario.routes";
 import cargoRoutes from "./routes/cargo.routes";
 import articuloRoutes from "./routes/articulos.routes";
 import dependenciaRoutes from "./routes/dependencia.routes";
+import rolRoutes from "./routes/rol.routes";
 const app = express();
 const cors = require('cors');
 // Settings
@@ -18,5 +19,5 @@ app.use("/usuarios", usuarioRoutes);
 app.use("/cargos", cargoRoutes);
 app.use("/articulos", articuloRoutes);
 app.use("/dependencia", dependenciaRoutes);
-
+app.use("/rol", rolRoutes);
 export default app;

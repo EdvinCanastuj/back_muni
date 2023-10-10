@@ -3,6 +3,6 @@ import { methods as rolcontroller } from "./../controllers/rol.controllers";
 
 
 const router=Router();
-router.get("/", rolcontroller.getRoles);
+router.get("/", rolcontroller.getRol);
 
 export default router;
