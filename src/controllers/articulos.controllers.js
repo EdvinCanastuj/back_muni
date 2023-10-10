@@ -135,7 +135,7 @@ const updateArticulo = async (req, res) => {
 
     const connection = await getConnection();
     const result = await connection.query("UPDATE articulos SET ? WHERE id_articulo = ?;", [articulo, id_articulo]);
-    res.json(result);
+    res.json("updated articulo");
   } catch (error) {
     res.status(500).send(error.message);
   }

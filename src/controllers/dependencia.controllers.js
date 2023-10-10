@@ -60,7 +60,7 @@ const updateDependencia= async (req, res) => {
     const dependencia = { nombre_dependencia };
     const connection = await getConnection();
     const result = await connection.query("UPDATE cargo SET ? WHERE id_cargo = ?;", [dependencia, id_dependencia]);
-    res.json(result);
+    res.json("updated dependencia");
   } catch (error) {
     res.status(500).send(error.message);
   }

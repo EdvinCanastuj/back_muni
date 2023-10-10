@@ -60,7 +60,7 @@ const updateCargo = async (req, res) => {
     const cargo = { nombre_cargo };
     const connection = await getConnection();
     const result = await connection.query("UPDATE cargo SET ? WHERE id_cargo = ?;", [cargo, id_cargo]);
-    res.json(result);
+    res.json("updated successfully");
   } catch (error) {
     res.status(500).send(error.message);
   }

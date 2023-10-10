@@ -67,7 +67,8 @@ const updateUsuario= async (req, res)=> {
         const usuario = { nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo, id_dependencia };
         const connection= await getConnection();
         const result = await connection.query("UPDATE usuario SET ? WHERE id_usuario = ?;",[usuario, id_usuario]);    
-        res.json(result);
+        //res.json(result);
+        res.json({message: "Usuario Updated"});
     }catch(error){
         res.status(500);
         res.send(error.message);
