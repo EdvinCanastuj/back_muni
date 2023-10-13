@@ -74,21 +74,22 @@ const updateUsuario= async (req, res)=> {
         res.send(error.message);
     }
 };
-const loginUsuario= async (req, res)=> {
-    try {
-        const {nombre_usuario, contrasena} = req.body;
-        const connection= await getConnection();
-        const result = await connection.query('SELECT * FROM usuario WHERE nombre_usuario = ? AND contrasena = ?', [nombre_usuario, contrasena]);
-        // res.json(result);
-        if (result.length > 0) {
-            res.json({ message: "Acceso permitido" });
-        } else {
-            res.status(401).json({ message: "Acceso denegado" });
-        }
-    } catch (error) {
-        res.status(500);
-        res.send(error.message);
-}
+const loginUsuario = async (req, res) => {
+try {
+    const { nombre_usuario, contrasena } = req.body;
+    const connection = await getConnection();
+    const result = await connection.query('SELECT * FROM usuario WHERE nombre_usuario = ? AND contrasena = ?', [nombre_usuario, contrasena]);
+
+    if (result.length > 0) {
+        const usuario = result[0];
+        res.json({ message: "Acceso permitido", rol: usuario.id_rol, nombre: usuario.nombre, apellido: usuario.apellido});
+    } else {
+        res.status(401).json({ message: "Acceso denegado" });
+    }
+} catch (error) {
+    res.status(500);
+    res.send(error.message);
+    }
 };
 export const methods={
     getUsuarios,
