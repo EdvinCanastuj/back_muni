@@ -29,7 +29,7 @@ const addCargo = async (req, res) => {
       res.status(400).json({ message: "Bad Request. Please fill all fields." });
       return;
     }
-    const cargo = { Nombre_cargo };
+    const cargo = { nombre_cargo };
     const connection = await getConnection();
     const result = await connection.query("INSERT INTO cargo SET ?", cargo);
     res.json({ message: "Cargo Added" });

@@ -8,4 +8,5 @@ router.get("/:id_articulo", articulocontroller.getArticulo);
 router.post("/", articulocontroller.addArticulo);
 router.delete("/:id_articulo", articulocontroller.deleteArticulo);
 router.put("/:id_articulo", articulocontroller.updateArticulo);
+router.get("/", articulocontroller.getArticulos);
 export default router;
