@@ -10,6 +10,16 @@ const getArticulos = async (req, res) => {
   }
 };
 
+const getArticuloU = async (req, res) => {
+  try {
+    const { id_usuario } = req.params;
+    const connection = await getConnection();
+    const result = await connection.query("SELECT a.codigo, a.cantidad, a.nombre_articulo, a.valor_unitario, a.valor_total, a.valor_baja, a.observaciones, u.nombre, u.apellido, u.codigo, c.nombre_cargo, d.nombre_dependencia FROM articulos a INNER JOIN usuario u ON a.id_usuario = u.id_usuario INNER JOIN cargo c ON u.id_cargo = c.id_cargo INNER JOIN dependencia d ON c.id_dependencia = d.id_dependencia WHERE a.id_usuario =?;", [id_usuario]);
+    res.json(result);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 const getArticulo = async (req, res) => {
   try {
     const { id_articulo } = req.params;
@@ -73,7 +83,7 @@ const addArticulo = async (req, res) => {
   } catch (error) {
     console.error("Error al insertar artículo:", error);
     res.status(500).json({ error: "Error interno del servidor" });
-  }
+}
 };
 const deleteArticulo = async (req, res) => {
   try {
@@ -156,5 +166,6 @@ export const methods = {
   addArticulo,
   updateArticulo,
   deleteArticulo,
-  getUsuarios
+  getUsuarios,
+  getArticuloU
 };

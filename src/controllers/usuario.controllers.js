@@ -3,7 +3,17 @@ import {getConnection} from "./../db/database";
 const getUsuarios= async (req, res)=> {
     try{
         const connection= await getConnection();
-        const result = await connection.query("SELECT u.id_usuario, u.nombre_usuario, u.nombre, u.apellido, u.codigo, r.tipo_rol, d.nombre_dependencia, c.nombre_cargo FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol INNER JOIN cargo c ON u.id_cargo = c.id_cargo INNER JOIN dependencia d ON u.id_dependencia = d.id_dependencia;");      
+        const result = await connection.query("SELECT u.id_usuario, u.nombre_usuario, u.nombre, u.apellido, u.codigo, r.tipo_rol, d.nombre_dependencia, c.nombre_cargo FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol INNER JOIN cargo c ON u.id_cargo = c.id_cargo INNER JOIN dependencia d ON c.id_dependencia = d.id_dependencia;");      
+        res.json(result);
+    }catch(error){
+        res.status(500);
+        res.send(error.message);
+    }
+};
+const getResponsable= async (req, res)=> {
+    try{
+        const connection= await getConnection();
+        const result = await connection.query("SELECT id_usuario, nombre, apellido, codigo FROM usuario;");      
         res.json(result);
     }catch(error){
         res.status(500);
@@ -27,11 +37,11 @@ const getUsuario= async (req, res)=> {
 const addUsuario = async (req, res)=> {
     try{
         //cambiarlo por los campos de la tabla
-        const { nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo, id_dependencia } = req.body;
-        if( nombre_usuario==undefined || nombre==undefined || apellido==undefined || contrasena==undefined || codigo==undefined || id_rol==undefined || id_cargo==undefined || id_dependencia==undefined){
+        const { nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo} = req.body;
+        if( nombre_usuario==undefined || nombre==undefined || apellido==undefined || contrasena==undefined || codigo==undefined || id_rol==undefined || id_cargo==undefined){
             res.status(400).json({message:"Bad Request. Please fill all field."});
         }
-        const usuario = {  nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo, id_dependencia };
+        const usuario = {  nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo};
         //INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `nombre`, `apellido`, `contrasena`, `codigo`, `id_rol`, `id_cargo`
         const connection= await getConnection();
         const result = await connection.query("INSERT INTO usuario SET ?",usuario);
@@ -60,11 +70,11 @@ const updateUsuario= async (req, res)=> {
     try{
         //cambiarlo por los campos de la tabla
         const {id_usuario} = req.params;
-        const { nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo, id_dependencia } = req.body;
-        if(id_usuario == undefined || nombre_usuario==undefined || nombre==undefined || apellido==undefined || contrasena==undefined || codigo==undefined || id_rol==undefined || id_cargo==undefined || id_dependencia==undefined){
+        const { nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo} = req.body;
+        if(id_usuario == undefined || nombre_usuario==undefined || nombre==undefined || apellido==undefined || contrasena==undefined || codigo==undefined || id_rol==undefined || id_cargo==undefined ){
             res.status(400).json({message:"Bad Request. Please fill all field."});
         }
-        const usuario = { nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo, id_dependencia };
+        const usuario = { nombre_usuario, nombre, apellido, contrasena, codigo, id_rol, id_cargo};
         const connection= await getConnection();
         const result = await connection.query("UPDATE usuario SET ? WHERE id_usuario = ?;",[usuario, id_usuario]);    
         //res.json(result);
@@ -97,6 +107,7 @@ export const methods={
     addUsuario,
     updateUsuario,
     deleteUsuario,
-    loginUsuario
+    loginUsuario,
+    getResponsable
 };
 
