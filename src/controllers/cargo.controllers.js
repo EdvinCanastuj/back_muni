@@ -3,7 +3,7 @@ import { getConnection } from "./../db/database";
 const getCargos = async (req, res) => {
   try {
     const connection = await getConnection();
-    const result = await connection.query("SELECT * FROM cargo;");
+    const result = await connection.query("SELECT c.id_cargo, c.nombre_cargo, d.nombre_dependencia FROM cargo c INNER JOIN dependencia d ON c.id_dependencia = d.id_dependencia;");
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
