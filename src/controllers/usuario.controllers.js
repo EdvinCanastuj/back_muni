@@ -10,6 +10,16 @@ const getUsuarios= async (req, res)=> {
         res.send(error.message);
     }
 };
+const getQr= async (req, res)=> {
+    try{
+        const connection= await getConnection();
+        const result = await connection.query("SELECT u.id_usuario, u.nombre_usuario, u.nombre, u.apellido, u.codigo, r.tipo_rol, d.nombre_dependencia, c.nombre_cargo FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol INNER JOIN cargo c ON u.id_cargo = c.id_cargo INNER JOIN dependencia d ON c.id_dependencia = d.id_dependencia;");      
+        res.json(result);
+    }catch(error){
+        res.status(500);
+        res.send(error.message);
+    }
+};
 const getResponsable= async (req, res)=> {
     try{
         const connection= await getConnection();
@@ -92,7 +102,7 @@ try {
 
     if (result.length > 0) {
         const usuario = result[0];
-        res.json({ message: "Acceso permitido", rol: usuario.id_rol, nombre: usuario.nombre, apellido: usuario.apellido});
+        res.json({ message: "Acceso permitido", rol: usuario.id_rol, nombre: usuario.nombre, apellido: usuario.apellido, id_usuario: usuario.id_usuario});
     } else {
         res.status(401).json({ message: "Acceso denegado" });
     }
@@ -103,6 +113,7 @@ try {
 };
 export const methods={
     getUsuarios,
+    getQr,
     getUsuario,
     addUsuario,
     updateUsuario,
