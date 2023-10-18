@@ -9,6 +9,15 @@ const getArticulos = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+const getArticulosUser = async (req, res) => {
+  try {
+    const connection = await getConnection();
+    const result = await connection.query("SELECT a.id_articulo, u.nombre, a.nombre_articulo FROM articulos a INNER JOIN usuario u ON a.id_usuario = u.id_usuario;");
+    res.json(result);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 const getQr = async (req, res) => {
   try {
     const connection = await getConnection();
@@ -18,7 +27,16 @@ const getQr = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-
+const getQrId = async (req, res) => {
+  try {
+    const { id_articulo } = req.params;
+    const connection = await getConnection();
+    const result = await connection.query("SELECT qr FROM articulos WHERE id_articulo = ?;", [id_articulo]);
+    res.json(result);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 const getArticuloU = async (req, res) => {
   try {
     const { id_usuario } = req.params;
@@ -162,7 +180,9 @@ const updateArticulo = async (req, res) => {
 
 export const methods = {
   getArticulos,
+  getArticulosUser,
   getQr,
+  getQrId,
   getArticuloU,
   getArticulo,
   addArticulo,
