@@ -3,7 +3,7 @@ import { getConnection } from "./../db/database";
 const getArticulos = async (req, res) => {
   try {
     const connection = await getConnection();
-    const result = await connection.query("SELECT a.id_articulo, u.nombre, a.codigo, a.nombre_articulo, a.no_serie, a.valor_unitario, a.valor_total, a.valor_baja, a.observaciones, a.qr, a.cantidad FROM articulos a INNER JOIN usuario u ON a.id_usuario = u.id_usuario;");
+    const result = await connection.query("SELECT a.id_articulo, u.nombre, a.codigo, a.nombre_articulo, a.no_serie, a.valor_unitario, a.valor_total, a.valor_baja, a.observaciones, a.cantidad FROM articulos a INNER JOIN usuario u ON a.id_usuario = u.id_usuario;");
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
@@ -21,22 +21,22 @@ const getArticulosUser = async (req, res) => {
 const getQr = async (req, res) => {
   try {
     const connection = await getConnection();
-    const result = await connection.query("SELECT a.id_articulo, u.nombre, a.nombre_articulo, a.qr FROM articulos a INNER JOIN usuario u ON a.id_usuario = u.id_usuario;");
+    const result = await connection.query("SELECT a.id_articulo, u.nombre, a.nombre_articulo FROM articulos a INNER JOIN usuario u ON a.id_usuario = u.id_usuario;");
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
-const getQrId = async (req, res) => {
-  try {
-    const { id_articulo } = req.params;
-    const connection = await getConnection();
-    const result = await connection.query("SELECT qr FROM articulos WHERE id_articulo = ?;", [id_articulo]);
-    res.json(result);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
+// const getQrId = async (req, res) => {
+//   try {
+//     const { id_articulo } = req.params;
+//     const connection = await getConnection();
+//     const result = await connection.query("SELECT qr FROM articulos WHERE id_articulo = ?;", [id_articulo]);
+//     res.json(result);
+//   } catch (error) {
+//     res.status(500).send(error.message);
+//   }
+// };
 const getArticuloU = async (req, res) => {
   try {
     const { id_usuario } = req.params;
@@ -68,7 +68,6 @@ const addArticulo = async (req, res) => {
       valor_unitario,
       valor_baja,
       observaciones,
-      qr,
       cantidad
     } = req.body;
 
@@ -80,7 +79,6 @@ const addArticulo = async (req, res) => {
       !valor_unitario ||
       !valor_baja ||
       !observaciones ||
-      !qr ||
       !cantidad
     ) {
       res.status(400).json({ message: "Bad Request. Please fill all fields." });
@@ -89,7 +87,7 @@ const addArticulo = async (req, res) => {
 
     const connection = await getConnection();
     // Calculamos el valor total en la consulta SQL
-    const sql = 'INSERT INTO articulos (id_usuario, codigo, nombre_articulo, no_serie, valor_unitario, valor_total, valor_baja, observaciones, qr, cantidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
+    const sql = 'INSERT INTO articulos (id_usuario, codigo, nombre_articulo, no_serie, valor_unitario, valor_total, valor_baja, observaciones,  cantidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);';
 
     const result = await connection.query(sql, [
       id_usuario,
@@ -99,8 +97,7 @@ const addArticulo = async (req, res) => {
       valor_unitario,
       valor_unitario * cantidad,
       valor_baja,
-      observaciones,
-      qr, // Insertamos la cadena directamente
+      observaciones, // Insertamos la cadena directamente
       cantidad
     ]);
     res.json({ message: "Articulo Added" });
@@ -132,7 +129,6 @@ const updateArticulo = async (req, res) => {
       valor_total,
       valor_baja,
       observaciones,
-      qr,
       cantidad
     } = req.body;
 
@@ -146,7 +142,6 @@ const updateArticulo = async (req, res) => {
       !valor_total ||
       !valor_baja ||
       !observaciones ||
-      !qr ||
       !cantidad
     ) {
       res.status(400).json({ message: "Bad Request. Please fill all fields." });
@@ -162,7 +157,6 @@ const updateArticulo = async (req, res) => {
       valor_total,
       valor_baja,
       observaciones,
-      qr,
       cantidad
     };
 
@@ -180,7 +174,7 @@ export const methods = {
   getArticulos,
   getArticulosUser,
   getQr,
-  getQrId,
+  //getQrId,
   getArticuloU,
   getArticulo,
   addArticulo,

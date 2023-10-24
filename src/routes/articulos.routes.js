@@ -6,7 +6,7 @@ const router=Router();
 router.get("/", articulocontroller.getArticulos);
 router.get("/usuario", articulocontroller.getArticulosUser);
 router.get("/qr", articulocontroller.getQr);
-router.get("/qr/:id_articulo", articulocontroller.getQrId)
+//router.get("/qr/:id_articulo", articulocontroller.getQrId)
 router.get("/articulo/:id_articulo", articulocontroller.getArticulo);
 router.get("/:id_articulo", articulocontroller.getArticulo);
 router.post("/", articulocontroller.addArticulo);
