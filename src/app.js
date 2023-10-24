@@ -5,6 +5,7 @@ import cargoRoutes from "./routes/cargo.routes";
 import articuloRoutes from "./routes/articulos.routes";
 import dependenciaRoutes from "./routes/dependencia.routes";
 import rolRoutes from "./routes/rol.routes";
+import historialRoutes from "./routes/historial.routes";
 const app = express();
 const cors = require('cors');
 // Settings
@@ -20,4 +21,5 @@ app.use("/cargos", cargoRoutes);
 app.use("/articulos", articuloRoutes);
 app.use("/dependencia", dependenciaRoutes);
 app.use("/rol", rolRoutes);
+app.use("/historial", historialRoutes);
 export default app;
