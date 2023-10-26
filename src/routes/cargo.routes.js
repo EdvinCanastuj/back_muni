@@ -4,6 +4,7 @@ import { methods as cargocontroller } from "./../controllers/cargo.controllers";
 
 const router=Router();
 router.get("/", cargocontroller.getCargos);
+router.get('/cargosByDependencia', cargocontroller.getCargosByDependencia);
 router.get("/:id_cargo", cargocontroller.getCargo);
 router.post("/", cargocontroller.addCargo);
 router.delete("/:id_cargo", cargocontroller.deleteCargo);

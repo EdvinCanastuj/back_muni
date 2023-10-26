@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-10-2023 a las 05:25:08
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 25-10-2023 a las 07:17:19
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `seminariobd`
+-- Base de datos: `municipalidadbd`
 --
 
 -- --------------------------------------------------------
@@ -30,29 +30,16 @@ SET time_zone = "+00:00";
 CREATE TABLE `articulos` (
   `id_articulo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  `codigo` varchar(255) NOT NULL,
-  `nombre_articulo` varchar(255) NOT NULL,
-  `no_serie` varchar(255) NOT NULL,
+  `codigo` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `nombre_articulo` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `no_serie` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
   `valor_unitario` decimal(10,0) NOT NULL,
   `valor_total` decimal(10,0) NOT NULL,
   `valor_baja` decimal(10,0) NOT NULL,
-  `observaciones` varchar(255) NOT NULL,
-  `qr` varchar(50) NOT NULL,
+  `observaciones` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `qr` varchar(50) COLLATE utf8mb4_general_nopad_ci NOT NULL,
   `cantidad` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
-
---
--- Volcado de datos para la tabla `articulos`
---
-
-INSERT INTO `articulos` (`id_articulo`, `id_usuario`, `codigo`, `nombre_articulo`, `no_serie`, `valor_unitario`, `valor_total`, `valor_baja`, `observaciones`, `qr`, `cantidad`) VALUES
-(1, 3, '123', 'pc', '123456', 15, 10, 12, 'regreso sigue vivo xd', '1', 2),
-(2, 3, '123', 'tv', '123456', 15, 10, 12, 'probando nuevo', '1', 2),
-(8, 14, 'as', 'dfs', 'ds', 12, 1, 2, 'probando', '123', 1),
-(9, 1, 'sd', 'dfs', 'sdf', 12, 3, 23, 'actualizando 3', 'sd', 1),
-(10, 11, 'ls', 'sdf', 'sd', 1, 2, 3, 'paco', 'as', 1),
-(11, 11, 'asd', 'as', 'asd', 1, 2, 3, 'hola mundo', 'as', 1),
-(12, 1, '123', 'impresora', '123', 15, 15, 0, 'nada nuevo', '', 1);
 
 --
 -- Disparadores `articulos`
@@ -80,20 +67,9 @@ DELIMITER ;
 
 CREATE TABLE `cargo` (
   `id_cargo` int(11) NOT NULL,
-  `nombre_cargo` varchar(255) NOT NULL,
+  `nombre_cargo` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
   `id_dependencia` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
-
---
--- Volcado de datos para la tabla `cargo`
---
-
-INSERT INTO `cargo` (`id_cargo`, `nombre_cargo`, `id_dependencia`) VALUES
-(1, 'Jefe', 2),
-(2, 'usuario', 1),
-(3, 'obrero', 3),
-(4, 'jefe', 5),
-(5, 'obrero', 3);
 
 -- --------------------------------------------------------
 
@@ -103,19 +79,8 @@ INSERT INTO `cargo` (`id_cargo`, `nombre_cargo`, `id_dependencia`) VALUES
 
 CREATE TABLE `dependencia` (
   `id_dependencia` int(11) NOT NULL,
-  `nombre_dependencia` varchar(255) NOT NULL
+  `nombre_dependencia` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
-
---
--- Volcado de datos para la tabla `dependencia`
---
-
-INSERT INTO `dependencia` (`id_dependencia`, `nombre_dependencia`) VALUES
-(1, 'informatica'),
-(2, 'secretaria'),
-(3, 'call center'),
-(4, 'bodega'),
-(5, 'cafeteria');
 
 -- --------------------------------------------------------
 
@@ -127,27 +92,17 @@ CREATE TABLE `historial` (
   `id_historial` int(11) NOT NULL,
   `id_articulo` int(11) DEFAULT NULL,
   `id_usuario` int(11) NOT NULL,
-  `codigo` varchar(255) NOT NULL,
-  `nombre_articulo` varchar(255) NOT NULL,
-  `no_serie` varchar(255) NOT NULL,
+  `codigo` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `nombre_articulo` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `no_serie` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
   `cantidad` decimal(10,2) NOT NULL,
   `valor_unitario` decimal(10,2) NOT NULL,
   `valor_total` decimal(10,2) NOT NULL,
   `valor_baja` decimal(10,2) NOT NULL,
-  `observaciones` varchar(50) NOT NULL,
-  `qr` varchar(50) NOT NULL,
+  `observaciones` varchar(50) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `qr` varchar(50) COLLATE utf8mb4_general_nopad_ci NOT NULL,
   `fecha` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
-
---
--- Volcado de datos para la tabla `historial`
---
-
-INSERT INTO `historial` (`id_historial`, `id_articulo`, `id_usuario`, `codigo`, `nombre_articulo`, `no_serie`, `cantidad`, `valor_unitario`, `valor_total`, `valor_baja`, `observaciones`, `qr`, `fecha`) VALUES
-(16, 12, 1, '123', 'impresora', '123', 1.00, 15.00, 15.00, 0.00, '', '', '2023-10-23 20:59:26'),
-(17, 12, 1, '123', 'impresora', '123', 1.00, 15.00, 15.00, 0.00, 'nada nuevo', '', '2023-10-23 21:01:53'),
-(18, 10, 11, 'ls', 'sdf', 'sd', 1.00, 1.00, 2.00, 3.00, 'pancho', 'as', '2023-10-23 21:22:10'),
-(19, 10, 11, 'ls', 'sdf', 'sd', 1.00, 1.00, 2.00, 3.00, 'paco', 'as', '2023-10-23 21:22:21');
 
 -- --------------------------------------------------------
 
@@ -157,16 +112,8 @@ INSERT INTO `historial` (`id_historial`, `id_articulo`, `id_usuario`, `codigo`, 
 
 CREATE TABLE `rol` (
   `id_rol` int(11) NOT NULL,
-  `tipo_rol` varchar(255) NOT NULL
+  `tipo_rol` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
-
---
--- Volcado de datos para la tabla `rol`
---
-
-INSERT INTO `rol` (`id_rol`, `tipo_rol`) VALUES
-(1, 'usuario'),
-(2, 'admin');
 
 -- --------------------------------------------------------
 
@@ -176,25 +123,14 @@ INSERT INTO `rol` (`id_rol`, `tipo_rol`) VALUES
 
 CREATE TABLE `usuario` (
   `id_usuario` int(11) NOT NULL,
-  `nombre_usuario` varchar(255) NOT NULL,
-  `nombre` varchar(255) NOT NULL,
-  `apellido` varchar(255) NOT NULL,
-  `contrasena` varchar(255) NOT NULL,
-  `codigo` varchar(255) DEFAULT NULL,
+  `nombre_usuario` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `nombre` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `apellido` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `contrasena` varchar(255) COLLATE utf8mb4_general_nopad_ci NOT NULL,
+  `codigo` varchar(255) COLLATE utf8mb4_general_nopad_ci DEFAULT NULL,
   `id_rol` int(11) DEFAULT NULL,
   `id_cargo` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
-
---
--- Volcado de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `nombre`, `apellido`, `contrasena`, `codigo`, `id_rol`, `id_cargo`) VALUES
-(1, 'luis1', 'luis', 'pacheco', '123', '321', 2, 1),
-(3, 'maria1', 'maria', 'poncio', '2345', '5432', 2, 2),
-(10, 'luis3', 'luis', 'pacheco', '123', '321', 1, 3),
-(11, 'jose1', 'Jose', 'herrera', '123', '123', 1, 1),
-(14, 'pancho', 'luis', 'hernandez ', '987', '789', 2, 1);
 
 --
 -- Índices para tablas volcadas
@@ -250,37 +186,37 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `articulos`
 --
 ALTER TABLE `articulos`
-  MODIFY `id_articulo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_articulo` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cargo`
 --
 ALTER TABLE `cargo`
-  MODIFY `id_cargo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_cargo` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `dependencia`
 --
 ALTER TABLE `dependencia`
-  MODIFY `id_dependencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_dependencia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas

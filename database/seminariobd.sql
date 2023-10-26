@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-10-2023 a las 02:52:04
+-- Tiempo de generación: 24-10-2023 a las 05:25:08
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -37,9 +37,40 @@ CREATE TABLE `articulos` (
   `valor_total` decimal(10,0) NOT NULL,
   `valor_baja` decimal(10,0) NOT NULL,
   `observaciones` varchar(255) NOT NULL,
-  `qr` varchar(255) NOT NULL,
-  `cantidad` int(255) NOT NULL
+  `qr` varchar(50) NOT NULL,
+  `cantidad` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
+
+--
+-- Volcado de datos para la tabla `articulos`
+--
+
+INSERT INTO `articulos` (`id_articulo`, `id_usuario`, `codigo`, `nombre_articulo`, `no_serie`, `valor_unitario`, `valor_total`, `valor_baja`, `observaciones`, `qr`, `cantidad`) VALUES
+(1, 3, '123', 'pc', '123456', 15, 10, 12, 'regreso sigue vivo xd', '1', 2),
+(2, 3, '123', 'tv', '123456', 15, 10, 12, 'probando nuevo', '1', 2),
+(8, 14, 'as', 'dfs', 'ds', 12, 1, 2, 'probando', '123', 1),
+(9, 1, 'sd', 'dfs', 'sdf', 12, 3, 23, 'actualizando 3', 'sd', 1),
+(10, 11, 'ls', 'sdf', 'sd', 1, 2, 3, 'paco', 'as', 1),
+(11, 11, 'asd', 'as', 'asd', 1, 2, 3, 'hola mundo', 'as', 1),
+(12, 1, '123', 'impresora', '123', 15, 15, 0, 'nada nuevo', '', 1);
+
+--
+-- Disparadores `articulos`
+--
+DELIMITER $$
+CREATE TRIGGER `after_insert_articulos` AFTER INSERT ON `articulos` FOR EACH ROW BEGIN
+    INSERT INTO historial (id_articulo, fecha, observaciones, id_usuario, codigo, nombre_articulo, no_serie, valor_unitario, valor_total, valor_baja, qr, cantidad)
+    VALUES (NEW.id_articulo, NOW(), NEW.observaciones, NEW.id_usuario, NEW.codigo, NEW.nombre_articulo, NEW.no_serie, NEW.valor_unitario, NEW.valor_total, NEW.valor_baja, NEW.qr, NEW.cantidad);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_update_articulos` AFTER UPDATE ON `articulos` FOR EACH ROW BEGIN
+    INSERT INTO historial (id_articulo, fecha, observaciones, id_usuario, codigo, nombre_articulo, no_serie, valor_unitario, valor_total, valor_baja, qr, cantidad)
+    VALUES (NEW.id_articulo, NOW(), NEW.observaciones, NEW.id_usuario, NEW.codigo, NEW.nombre_articulo, NEW.no_serie, NEW.valor_unitario, NEW.valor_total, NEW.valor_baja, NEW.qr, NEW.cantidad);
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -49,16 +80,20 @@ CREATE TABLE `articulos` (
 
 CREATE TABLE `cargo` (
   `id_cargo` int(11) NOT NULL,
-  `nombre_cargo` varchar(255) NOT NULL
+  `nombre_cargo` varchar(255) NOT NULL,
+  `id_dependencia` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
 
 --
 -- Volcado de datos para la tabla `cargo`
 --
 
-INSERT INTO `cargo` (`id_cargo`, `nombre_cargo`) VALUES
-(1, 'Jefe'),
-(2, 'usuario');
+INSERT INTO `cargo` (`id_cargo`, `nombre_cargo`, `id_dependencia`) VALUES
+(1, 'Jefe', 2),
+(2, 'usuario', 1),
+(3, 'obrero', 3),
+(4, 'jefe', 5),
+(5, 'obrero', 3);
 
 -- --------------------------------------------------------
 
@@ -77,7 +112,10 @@ CREATE TABLE `dependencia` (
 
 INSERT INTO `dependencia` (`id_dependencia`, `nombre_dependencia`) VALUES
 (1, 'informatica'),
-(2, 'secretaria');
+(2, 'secretaria'),
+(3, 'call center'),
+(4, 'bodega'),
+(5, 'cafeteria');
 
 -- --------------------------------------------------------
 
@@ -87,8 +125,29 @@ INSERT INTO `dependencia` (`id_dependencia`, `nombre_dependencia`) VALUES
 
 CREATE TABLE `historial` (
   `id_historial` int(11) NOT NULL,
-  `id_articulo` int(11) DEFAULT NULL
+  `id_articulo` int(11) DEFAULT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `codigo` varchar(255) NOT NULL,
+  `nombre_articulo` varchar(255) NOT NULL,
+  `no_serie` varchar(255) NOT NULL,
+  `cantidad` decimal(10,2) NOT NULL,
+  `valor_unitario` decimal(10,2) NOT NULL,
+  `valor_total` decimal(10,2) NOT NULL,
+  `valor_baja` decimal(10,2) NOT NULL,
+  `observaciones` varchar(50) NOT NULL,
+  `qr` varchar(50) NOT NULL,
+  `fecha` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
+
+--
+-- Volcado de datos para la tabla `historial`
+--
+
+INSERT INTO `historial` (`id_historial`, `id_articulo`, `id_usuario`, `codigo`, `nombre_articulo`, `no_serie`, `cantidad`, `valor_unitario`, `valor_total`, `valor_baja`, `observaciones`, `qr`, `fecha`) VALUES
+(16, 12, 1, '123', 'impresora', '123', 1.00, 15.00, 15.00, 0.00, '', '', '2023-10-23 20:59:26'),
+(17, 12, 1, '123', 'impresora', '123', 1.00, 15.00, 15.00, 0.00, 'nada nuevo', '', '2023-10-23 21:01:53'),
+(18, 10, 11, 'ls', 'sdf', 'sd', 1.00, 1.00, 2.00, 3.00, 'pancho', 'as', '2023-10-23 21:22:10'),
+(19, 10, 11, 'ls', 'sdf', 'sd', 1.00, 1.00, 2.00, 3.00, 'paco', 'as', '2023-10-23 21:22:21');
 
 -- --------------------------------------------------------
 
@@ -123,18 +182,19 @@ CREATE TABLE `usuario` (
   `contrasena` varchar(255) NOT NULL,
   `codigo` varchar(255) DEFAULT NULL,
   `id_rol` int(11) DEFAULT NULL,
-  `id_cargo` int(11) DEFAULT NULL,
-  `id_dependencia` int(11) DEFAULT NULL
+  `id_cargo` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_nopad_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `nombre`, `apellido`, `contrasena`, `codigo`, `id_rol`, `id_cargo`, `id_dependencia`) VALUES
-(1, 'luis1', 'luis', 'pacheco', '123', '321', 1, 1, 1),
-(3, 'maria1', 'maria', 'poncio', '2345', '5432', 2, 1, 2),
-(4, 'marcos', 'herrera', 'PACHECO', '354', '987', 1, 1, 1);
+INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `nombre`, `apellido`, `contrasena`, `codigo`, `id_rol`, `id_cargo`) VALUES
+(1, 'luis1', 'luis', 'pacheco', '123', '321', 2, 1),
+(3, 'maria1', 'maria', 'poncio', '2345', '5432', 2, 2),
+(10, 'luis3', 'luis', 'pacheco', '123', '321', 1, 3),
+(11, 'jose1', 'Jose', 'herrera', '123', '123', 1, 1),
+(14, 'pancho', 'luis', 'hernandez ', '987', '789', 2, 1);
 
 --
 -- Índices para tablas volcadas
@@ -151,7 +211,8 @@ ALTER TABLE `articulos`
 -- Indices de la tabla `cargo`
 --
 ALTER TABLE `cargo`
-  ADD PRIMARY KEY (`id_cargo`);
+  ADD PRIMARY KEY (`id_cargo`),
+  ADD KEY `cargo_ibfk_1` (`id_dependencia`);
 
 --
 -- Indices de la tabla `dependencia`
@@ -179,8 +240,7 @@ ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `nombre_usuario` (`nombre_usuario`),
   ADD KEY `Id_rol` (`id_rol`),
-  ADD KEY `Id_cargo` (`id_cargo`),
-  ADD KEY `Id_dependencia` (`id_dependencia`);
+  ADD KEY `Id_cargo` (`id_cargo`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -190,25 +250,25 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `articulos`
 --
 ALTER TABLE `articulos`
-  MODIFY `id_articulo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_articulo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `cargo`
 --
 ALTER TABLE `cargo`
-  MODIFY `id_cargo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_cargo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `dependencia`
 --
 ALTER TABLE `dependencia`
-  MODIFY `id_dependencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_dependencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -220,7 +280,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas
@@ -230,21 +290,26 @@ ALTER TABLE `usuario`
 -- Filtros para la tabla `articulos`
 --
 ALTER TABLE `articulos`
-  ADD CONSTRAINT `articulos_ibfk_1` FOREIGN KEY (`Id_usuario`) REFERENCES `usuario` (`Id_usuario`);
+  ADD CONSTRAINT `articulos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
+
+--
+-- Filtros para la tabla `cargo`
+--
+ALTER TABLE `cargo`
+  ADD CONSTRAINT `cargo_ibfk_1` FOREIGN KEY (`id_dependencia`) REFERENCES `dependencia` (`id_dependencia`);
 
 --
 -- Filtros para la tabla `historial`
 --
 ALTER TABLE `historial`
-  ADD CONSTRAINT `historial_ibfk_1` FOREIGN KEY (`Id_articulo`) REFERENCES `articulos` (`Id_articulo`);
+  ADD CONSTRAINT `historial_ibfk_1` FOREIGN KEY (`id_articulo`) REFERENCES `articulos` (`id_articulo`);
 
 --
 -- Filtros para la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`Id_rol`) REFERENCES `rol` (`Id_rol`),
-  ADD CONSTRAINT `usuario_ibfk_2` FOREIGN KEY (`Id_cargo`) REFERENCES `cargo` (`Id_cargo`),
-  ADD CONSTRAINT `usuario_ibfk_3` FOREIGN KEY (`Id_dependencia`) REFERENCES `dependencia` (`Id_dependencia`);
+  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id_rol`),
+  ADD CONSTRAINT `usuario_ibfk_2` FOREIGN KEY (`id_cargo`) REFERENCES `cargo` (`id_cargo`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

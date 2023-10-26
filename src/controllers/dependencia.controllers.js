@@ -57,10 +57,15 @@ const updateDependencia= async (req, res) => {
       res.status(400).json({ message: "Bad Request. Please fill all fields." });
       return;
     }
-    const dependencia = { nombre_dependencia };
+    
     const connection = await getConnection();
-    const result = await connection.query("UPDATE cargo SET ? WHERE id_cargo = ?;", [dependencia, id_dependencia]);
-    res.json("updated dependencia");
+    const result = await connection.query("UPDATE dependencia SET nombre_dependencia = ? WHERE id_dependencia = ?;", [nombre_dependencia, id_dependencia]);
+    
+    if (result.affectedRows > 0) {
+      res.json("Updated dependencia");
+    } else {
+      res.status(404).json({ message: "Dependencia not found." });
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }

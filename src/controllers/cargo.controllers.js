@@ -10,21 +10,24 @@ const getCargos = async (req, res) => {
   }
 };
 
+const getCargosByDependencia = async (req, res) => {
+  try {
+    const { dependenciaId } = req.query; // Usamos req.query para obtener el parámetro de consulta dependenciaId
+    const connection = await getConnection();
+    const sql = "SELECT c.id_cargo, c.nombre_cargo FROM cargo c WHERE c.id_dependencia = ?;";
+    const result = await connection.query(sql, [dependenciaId]);
+    res.json(result);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 const getCargo = async (req, res) => {
   try {
     console.log(req.params);
     const { id_cargo } = req.params;
     const connection = await getConnection();
     const result = await connection.query("SELECT * FROM cargo WHERE id_cargo = ?;", [id_cargo]);
-    res.json(result);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-const getQr = async (req, res) => {
-  try {
-    const connection = await getConnection();
-    const result = await connection.query("SELECT a.id_articulo, u.nombre, a.codigo, a.nombre_articulo, a.no_serie, a.valor_unitario, a.valor_total, a.valor_baja, a.observaciones, a.qr, a.cantidad FROM articulos a INNER JOIN usuario u ON a.id_usuario = u.id_usuario;");
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
@@ -61,12 +64,13 @@ const deleteCargo = async (req, res) => {
 const updateCargo = async (req, res) => {
   try {
     const { id_cargo } = req.params;
-    const { nombre_cargo, id_dependencia } = req.body;
-    if (!id_cargo || !nombre_cargo || !id_dependencia) {
-      res.status(400).json({ message: "Bad Request. Please fill all fields." });
-      return;
+    const { nombre_cargo } = req.body;
+
+    if (!id_cargo || !nombre_cargo ) {
+      return res.status(400).json({ message: "Bad Request. Please fill all fields." });
+      
     }
-    const cargo = { nombre_cargo, id_dependencia };
+    const cargo = { nombre_cargo };
     const connection = await getConnection();
     const result = await connection.query("UPDATE cargo SET ? WHERE id_cargo = ?;", [cargo, id_cargo]);
     res.json("updated successfully");
@@ -77,9 +81,10 @@ const updateCargo = async (req, res) => {
 
 export const methods = {
   getCargos,
+  getCargosByDependencia,
   getCargo,
-  getQr,
   addCargo,
   updateCargo,
-  deleteCargo
+  deleteCargo,
+  
 };
